@@ -23,7 +23,7 @@ router = APIRouter()
 
 
 @router.post("/", response_description="user data added into the database", response_model=userSchema)
-async def add_user_data(current_user: userSchema = Depends(get_current_active_user)):
+async def add_user_data(current_user: userSchema = Depends(get_current_active_user), user: userSchema = Body(...)):
     data = jsonable_encoder(user)
 
     # fix it crate a method to do this validation
@@ -34,7 +34,7 @@ async def add_user_data(current_user: userSchema = Depends(get_current_active_us
     return ResponseModel(new_data, "user added successfully.")
 
 
-@ router.get("/", response_description="users retrieved", response_model=userSchema)
+@ router.get("/", response_description="users retrieved")
 async def get_users(current_user: userSchema = Depends(get_current_active_user)):
     users = await retrieve_data("users_collection", user_helper)
     if users:

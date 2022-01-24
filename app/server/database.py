@@ -7,7 +7,7 @@ client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
 
 database = client.katalogos
 user_collection = database.get_collection("users_collection")
-
+#user_collection.create_index("login", unique=True)
 # helpers
 
 
