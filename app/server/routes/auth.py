@@ -63,7 +63,7 @@ class UserInDB(User):
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 app = FastAPI()
 
@@ -74,7 +74,7 @@ def verify_password(plain_password, hashed_password):
 
 async def get_user(username: str):
     loop = asyncio.get_event_loop()
-    user = await retrieve_data_by_param("user_collection", user_helper, {"login": username})
+    user = await retrieve_data_by_param("user_collection", user_helper, {"email": username})
     return user
 
 
@@ -129,7 +129,7 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
     return JSONResponse(content=data)
 
 
-@router.post("/token", response_model=Token)
+@router.post("/login", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = await authenticate_user(
         form_data.username, form_data.password)
@@ -141,7 +141,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user[0]["login"]}, expires_delta=access_token_expires
+        data={"sub": user[0]["email"]}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 

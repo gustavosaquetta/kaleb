@@ -22,10 +22,9 @@ from app.server.models.user import (
 router = APIRouter()
 
 
-@router.post("/", response_description="user data added into the database", response_model=userSchema)
-async def add_user_data(current_user: userSchema = Depends(get_current_active_user), user: userSchema = Body(...)):
+@router.post("/", response_description="user data added into the database")
+async def add_user_data(user: userSchema = Body(...)):
     data = jsonable_encoder(user)
-
     # fix it crate a method to do this validation
     if data.get("password") and len(data.get("password")) < 30:
         data["password"] = pbkdf2_sha256.hash(data["password"])
@@ -36,7 +35,7 @@ async def add_user_data(current_user: userSchema = Depends(get_current_active_us
 
 @ router.get("/", response_description="users retrieved")
 async def get_users(current_user: userSchema = Depends(get_current_active_user)):
-    users = await retrieve_data("users_collection", user_helper)
+    users = await retrieve_data("user_collection", user_helper)
     if users:
         return ResponseModel(users, "users data retrieved successfully")
     return ResponseModel(users, "Empty list returned")

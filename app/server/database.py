@@ -1,13 +1,16 @@
 import motor.motor_asyncio
 from bson.objectid import ObjectId
 
-MONGO_DETAILS = "mongodb://localhost:27017"
+# MONGO_DETAILS = "mongodb://localhost:27017"
+MONGO_DETAILS = "mongodb://172.17.0.3:27017/"
 
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
 
 database = client.katalogos
-user_collection = database.get_collection("users_collection")
-#user_collection.create_index("login", unique=True)
+# user_collection = database.get_collection("users_collection")
+user_collection = database.get_collection("users")
+# user_collection.create_index("login", unique=True)
+
 # helpers
 
 
@@ -15,11 +18,8 @@ def user_helper(user) -> dict:
     return {
         "id": str(user["_id"]),
         "fullname": user["fullname"],
+        "birthDate": user["birthDate"],
         "email": user["email"],
-        "course_of_study": user["course_of_study"],
-        "year": user["year"],
-        "gpa": user["gpa"],
-        "login": user["login"],
         "password": user["password"],
         "active": user.get("active")
     }
@@ -28,12 +28,12 @@ def user_helper(user) -> dict:
 # Retrieve all data of collection named present in the database
 async def retrieve_data(collection, helper):
     try:
-        collection = database.get_collection(collection)
+        collection = eval(collection)
     except:
         return [{"error": "collection not found"}]
 
     data = []
-    async for coll in collection.find():
+    async for coll in collection.find({}):
         data.append(user_helper(coll))
     return data
 

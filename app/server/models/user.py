@@ -1,28 +1,26 @@
 from typing import Optional
 
 from pydantic import BaseModel, EmailStr, Field
+from datetime import date
 
 
 class userSchema(BaseModel):
     fullname: str = Field(...)
     email: EmailStr = Field(...)
-    course_of_study: str = Field(...)
-    login: str = Field(...)
     password: str = Field(...)
-    year: int = Field(..., gt=0, lt=9)
-    gpa: float = Field(..., le=4.0)
-    active: bool = Field(...)
+    birthDate: date = Field(...)
+    userType: str = Field(...)
+    active: bool = True
 
     class Config:
+
         schema_extra = {
             "example": {
-                "fullname": "Saquetta",
-                "email": "gustavosaquetta@gmail.com",
-                "course_of_study": "Software Engineering",
-                "login": "gustavo.saquetta",
-                "password": "appetile",
-                "year": 4,
-                "gpa": "3.0",
+                "fullname": "Letícia Kraus",
+                "email": "leti.kraus@gmail.com",
+                "password": "123456",
+                "birthDate": "1998-08-26",
+                "userType": "user",
                 "active": True
             }
         }
@@ -31,23 +29,19 @@ class userSchema(BaseModel):
 class UpdateuserModel(BaseModel):
     fullname: str = Field(...)
     email: EmailStr = Field(...)
-    course_of_study: str = Field(...)
-    login: str = Field(...)
     password: str = Field(...)
-    year: int = Field(..., gt=0, lt=9)
-    gpa: float = Field(..., le=4.0)
+    birthDate: date = Field(...)
+    userType: str = Field(...)
     active: bool = Field(...)
 
     class Config:
         schema_extra = {
             "example": {
-                "fullname": "Saquetta",
-                "email": "gustavosaquetta@gmail.com",
-                "course_of_study": "Software Engineering",
-                "login": "gustavo.saquetta",
-                "password": "appetile",
-                "year": 4,
-                "gpa": "3.0",
+                "fullname": "Letícia Kraus",
+                "email": "leti.kraus@gmail.com",
+                "password": "123456",
+                "birthDate": "1998-08-26",
+                "userType": "user",
                 "active": True
             }
         }
